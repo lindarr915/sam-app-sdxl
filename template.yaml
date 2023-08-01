@@ -22,6 +22,8 @@ Resources:
    HelloSDXLFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
       MemorySize: 10240
       PackageType: Image
       Architectures:

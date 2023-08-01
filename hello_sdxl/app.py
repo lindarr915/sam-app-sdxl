@@ -33,7 +33,9 @@ def lambda_handler(event, context):
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
     # print(event)()
-    prompt = json.loads(event['body'])["prompt"]
+    data = json.loads(event['body'])
+    prompt = data["prompt"]
+    seed = data["seed"]
 
     #payload = json.dumps(data)
 
@@ -42,7 +44,7 @@ def lambda_handler(event, context):
 
         output = deployed_model.predict(GenerationRequest(
                 text_prompts=[TextPrompt(text=prompt)], # [TextPrompt(text=prompt)]
-                seed=12345, # payload['seed']
+                seed=seed, # payload['seed']
                 width=1024, # payload['width']
                 height=1024. # payload['height']
             ))
@@ -52,7 +54,7 @@ def lambda_handler(event, context):
     except Exception as err:
         # Send some context about this error to Lambda Logs
         response = err
-    
+        print(response)
 
     return {
         "statusCode": 200,
