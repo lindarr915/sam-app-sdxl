@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "aws": {
+                "credentials": "profile:chatbot"
+            },
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "sam-app-sdxl:HelloSDXLFunction (python3.10)",
+            "invokeTarget": {
+                "target": "template",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "HelloSDXLFunction"
+            },
+            "lambda": {
+                "payload": {
+                    "path": "${workspaceFolder}/events/event.json"
+                },
+                "environmentVariables": {
+                    "AWS_PROFILE": "chatbot"
+                },
+                "runtime": "python3.10",
+                "memoryMb": 10240
+            }
+        }
+    ]
+}

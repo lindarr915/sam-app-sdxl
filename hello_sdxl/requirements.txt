@@ -1,0 +1,6 @@
+requests
+langchain==0.0.233
+urllib3<2
+sagemaker
+# stability-sdk[sagemaker] @ git+https://github.com/Stability-AI/stability-sdk.git@sagemaker
+debugpy>=1.0,<2
