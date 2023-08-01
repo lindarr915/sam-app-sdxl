@@ -16,11 +16,7 @@
                 "payload": {
                     "path": "${workspaceFolder}/events/event.json"
                 },
-                "environmentVariables": {
-                    "AWS_PROFILE": "chatbot"
-                },
                 "runtime": "python3.10",
-                "memoryMb": 10240
             }
         }
     ]

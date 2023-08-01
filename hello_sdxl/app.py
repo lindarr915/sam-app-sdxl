@@ -47,17 +47,16 @@ def lambda_handler(event, context):
                 height=1024. # payload['height']
             ))
         
-        response = io.BytesIO(base64.b64decode(output.artifacts[0].base64.encode())).getvalue()
+        response = io.BytesIO(base64.b64decode((output.artifacts[0].base64.encode()))).getvalue()
     
     except Exception as err:
         # Send some context about this error to Lambda Logs
         response = err
     
-    print(response)
 
     return {
         "statusCode": 200,
-        'headers': { "Content-Type": "image/jpg" },
+        'headers': { "Content-Type": "image/png" },
         'body': base64.b64encode(response).decode('utf-8'),
         'isBase64Encoded': True
     }
