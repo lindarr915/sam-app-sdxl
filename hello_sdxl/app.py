@@ -8,8 +8,8 @@ from stability_sdk_sagemaker.predictor import StabilityPredictor
 from stability_sdk.api import GenerationRequest, TextPrompt
 
 
-
 sagemaker_session = sagemaker.Session()
+
 
 def lambda_handler(event, context):
     """Sample pure Lambda function
@@ -36,21 +36,30 @@ def lambda_handler(event, context):
     data = json.loads(event['body'])
     prompt = data["prompt"]
     seed = data["seed"]
+    cfg_scale = data["cfg_scale"]
+    style_preset = data["style_preset"]
+    sampler=data["sampler"]
 
-    #payload = json.dumps(data)
+    # payload = json.dumps(data)
 
     try:
-        deployed_model = StabilityPredictor(endpoint_name="sdxl-1-jumpstart", sagemaker_session=sagemaker_session)
+        deployed_model = StabilityPredictor(
+            endpoint_name="sdxl-1-jumpstart", sagemaker_session=sagemaker_session)
 
         output = deployed_model.predict(GenerationRequest(
-                text_prompts=[TextPrompt(text=prompt)], # [TextPrompt(text=prompt)]
-                seed=seed, # payload['seed']
-                width=1024, # payload['width']
-                height=1024. # payload['height']
-            ))
-        
-        response = io.BytesIO(base64.b64decode((output.artifacts[0].base64.encode()))).getvalue()
-    
+            # [TextPrompt(text=prompt)]
+            text_prompts=[TextPrompt(text=prompt)],
+            seed=seed,  # payload['seed']
+            width=1024,  # payload['width']
+            height=1024,  # payload['height']
+            style_preset=style_preset,
+            cfg_scale=cfg_scale,
+            sampler=sampler
+        ))
+
+        response = io.BytesIO(base64.b64decode(
+            (output.artifacts[0].base64.encode()))).getvalue()
+
     except Exception as err:
         # Send some context about this error to Lambda Logs
         response = err
@@ -58,7 +67,7 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        'headers': { "Content-Type": "image/png" },
+        'headers': {"Content-Type": "image/png"},
         'body': base64.b64encode(response).decode('utf-8'),
         'isBase64Encoded': True
     }
