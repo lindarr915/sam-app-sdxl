@@ -32,15 +32,15 @@ def lambda_handler(event, context):
 
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
-    # print(event)()
     data = json.loads(event['body'])
-    prompt = data["prompt"]
+
+    # get the parameters from the event and provide the default values
+    prompt = data["prompt"] or  "A beautiful sunset over the ocean."
+
     seed = data["seed"]
     cfg_scale = data["cfg_scale"]
     style_preset = data["style_preset"]
     sampler=data["sampler"]
-
-    # payload = json.dumps(data)
 
     try:
         deployed_model = StabilityPredictor(
@@ -50,13 +50,11 @@ def lambda_handler(event, context):
             # [TextPrompt(text=prompt)]
             text_prompts=[TextPrompt(text=prompt)],
             seed=seed,  # payload['seed']
-            width=1024,  # payload['width']
-            height=1024,  # payload['height']
             style_preset=style_preset,
             cfg_scale=cfg_scale,
             sampler=sampler
         ))
-
+        print(output)
         response = io.BytesIO(base64.b64decode(
             (output.artifacts[0].base64.encode()))).getvalue()
 
